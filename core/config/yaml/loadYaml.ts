@@ -197,6 +197,7 @@ export async function configYamlToContinueConfig(options: {
       autocomplete: [],
       rerank: [],
       summarize: [],
+      subagent: [],
     },
     selectedModelByRole: {
       chat: null,
@@ -206,6 +207,7 @@ export async function configYamlToContinueConfig(options: {
       autocomplete: null,
       rerank: null,
       summarize: null,
+      subagent: null,
     },
     rules: [],
     requestOptions: { ...config.requestOptions },
@@ -335,6 +337,10 @@ export async function configYamlToContinueConfig(options: {
 
       if (model.roles?.includes("summarize")) {
         continueConfig.modelsByRole.summarize.push(...llms);
+      }
+
+      if (model.roles?.includes("subagent")) {
+        continueConfig.modelsByRole.subagent.push(...llms);
       }
 
       if (model.roles?.includes("apply")) {

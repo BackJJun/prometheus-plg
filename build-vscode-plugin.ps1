@@ -19,13 +19,15 @@ Write-Host "Building binary project..."
 npm run build
 Set-Location -Path ".."
 
-# 3. Delete all contents of extensions\vscode\gui
+# 3. Reset extensions\vscode\gui
 Write-Host "Cleaning extensions\\vscode\\gui..."
-Remove-Item -Path "extensions\\vscode\\gui\\*" -Recurse -Force -ErrorAction SilentlyContinue
+$vscodeGuiPath = "extensions\\vscode\\gui"
+Remove-Item -LiteralPath $vscodeGuiPath -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path $vscodeGuiPath -Force | Out-Null
 
 # 4. Copy gui/dist contents to extensions\vscode\gui
 Write-Host "Copying GUI build artifacts..."
-Copy-Item -Path "gui\\dist\\*" -Destination "extensions\\vscode\\gui" -Recurse -Force
+Copy-Item -Path "gui\\dist\\*" -Destination $vscodeGuiPath -Recurse -Force
 
 # 5. Delete extensions\vscode\bin folder
 Write-Host "Cleaning extensions\\vscode\\bin..."

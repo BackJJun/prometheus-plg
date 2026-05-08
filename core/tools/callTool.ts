@@ -21,6 +21,7 @@ import { readFileRangeImpl } from "./implementations/readFileRange";
 import { requestRuleImpl } from "./implementations/requestRule";
 import { runTerminalCommandImpl } from "./implementations/runTerminalCommand";
 import { searchWebImpl } from "./implementations/searchWeb";
+import { subagentImpl } from "./implementations/subagent";
 import { viewDiffImpl } from "./implementations/viewDiff";
 import { viewRepoMapImpl } from "./implementations/viewRepoMap";
 import { viewSubdirectoryImpl } from "./implementations/viewSubdirectory";
@@ -173,6 +174,8 @@ export async function callBuiltInTool(
       return await readReferenceImpl(args, extras);
     case BuiltInToolNames.ReadSkill:
       return await readSkillImpl(args, extras);
+    case BuiltInToolNames.Subagent:
+      return await subagentImpl(args, extras);
     case BuiltInToolNames.ViewDiff:
       return await viewDiffImpl(args, extras);
     case BuiltInToolNames.LSTool:

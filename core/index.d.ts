@@ -1176,6 +1176,7 @@ export interface ConfigDependentToolParams {
   isRemote: boolean;
   modelName: string | undefined;
   ide: IDE;
+  config?: ContinueConfig;
 }
 
 export type GetTool = (params: ConfigDependentToolParams) => Promise<Tool>;

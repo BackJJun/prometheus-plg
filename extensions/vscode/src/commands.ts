@@ -41,6 +41,10 @@ import { VerticalDiffManager } from "./diff/vertical/manager";
 import EditDecorationManager from "./quickEdit/EditDecorationManager";
 import { QuickEdit, QuickEditShowParams } from "./quickEdit/QuickEditQuickPick";
 import {
+  runChecksFromExtension,
+  runReviewFromExtension,
+} from "./review/reviewCommands";
+import {
   addCodeToContextFromRange,
   addEntireFileToContext,
   addHighlightedCodeToContext,
@@ -882,6 +886,14 @@ const getCommandsMap: (
       await vscode.commands.executeCommand(
         "editor.action.inlineSuggest.trigger",
       );
+    },
+    "continue.reviewChanges": async () => {
+      captureCommandTelemetry("reviewChanges");
+      await runReviewFromExtension(extensionContext);
+    },
+    "continue.checkPrStatus": async () => {
+      captureCommandTelemetry("checkPrStatus");
+      await runChecksFromExtension(extensionContext);
     },
   };
 };

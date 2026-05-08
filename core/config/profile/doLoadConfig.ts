@@ -165,6 +165,7 @@ export default async function doLoadConfig(options: {
         autocomplete: [],
         rerank: [],
         summarize: [],
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -174,6 +175,7 @@ export default async function doLoadConfig(options: {
         autocomplete: null,
         rerank: null,
         summarize: null,
+        subagent: null,
       },
       rules: [],
       requestOptions: {},
@@ -360,6 +362,7 @@ export default async function doLoadConfig(options: {
       isRemote: await ide.isWorkspaceRemote(),
       modelName: newConfig.selectedModelByRole.chat?.model,
       ide,
+      config: newConfig,
     })),
   );
 

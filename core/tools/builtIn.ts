@@ -18,6 +18,7 @@ export enum BuiltInToolNames {
   ReadReference = "read_reference",
   CodebaseTool = "codebase",
   ReadSkill = "read_skill",
+  Subagent = "Subagent",
 
   // excluded from allTools for now
   ViewRepoMap = "view_repo_map",
@@ -30,4 +31,5 @@ export const CLIENT_TOOLS_IMPLS = [
   BuiltInToolNames.EditExistingFile,
   BuiltInToolNames.SingleFindAndReplace,
   BuiltInToolNames.MultiEdit,
+  BuiltInToolNames.Subagent,
 ];

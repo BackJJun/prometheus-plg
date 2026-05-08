@@ -25,6 +25,9 @@ export const getConfigDependentToolDefinitions = async (
 
   tools.push(await toolDefinitions.requestRuleTool(params));
   tools.push(await toolDefinitions.readSkillTool(params));
+  if ((params.config?.modelsByRole.subagent ?? []).length > 0) {
+    tools.push(await toolDefinitions.subagentTool(params));
+  }
 
   if (isSignedIn) {
     // Web search is only available for signed-in users

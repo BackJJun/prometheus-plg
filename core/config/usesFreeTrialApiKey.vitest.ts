@@ -58,6 +58,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -67,6 +69,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],
@@ -106,6 +110,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -115,6 +121,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],
@@ -166,6 +174,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -175,6 +185,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],
@@ -227,6 +239,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -236,6 +250,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],
@@ -281,6 +297,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -290,6 +308,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],
@@ -323,6 +343,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: [],
         rerank: [],
         embed: [],
+
+        subagent: [],
       },
       selectedModelByRole: {
         chat: null,
@@ -332,6 +354,8 @@ describe("usesFreeTrialApiKey", () => {
         autocomplete: null,
         rerank: null,
         embed: null,
+
+        subagent: null,
       },
       contextProviders: [],
       slashCommands: [],

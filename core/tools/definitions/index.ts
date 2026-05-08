@@ -17,6 +17,7 @@ export { requestRuleTool } from "./requestRule";
 export { runTerminalCommandTool } from "./runTerminalCommand";
 export { searchWebTool } from "./searchWeb";
 export { singleFindAndReplaceTool } from "./singleFindAndReplace";
+export { subagentTool } from "./subagent";
 export { viewDiffTool } from "./viewDiff";
 export { viewRepoMapTool } from "./viewRepoMap";
 export { viewSubdirectoryTool } from "./viewSubdirectory";

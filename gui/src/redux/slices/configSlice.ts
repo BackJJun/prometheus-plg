@@ -1,6 +1,7 @@
 import { ConfigResult, ConfigValidationError } from "@continuedev/config-yaml";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BrowserSerializedContinueConfig, Tool } from "core";
+import { BuiltInToolNames } from "core/tools/builtIn";
 import { loadRemoteModels } from "../thunks/loadRemoteModels";
 
 export type ConfigState = {
@@ -23,6 +24,7 @@ export const EMPTY_CONFIG: BrowserSerializedContinueConfig = {
     autocomplete: [],
     rerank: [],
     embed: [],
+    subagent: [],
   },
   selectedModelByRole: {
     chat: null,
@@ -32,6 +34,7 @@ export const EMPTY_CONFIG: BrowserSerializedContinueConfig = {
     autocomplete: null,
     rerank: null,
     embed: null,
+    subagent: null,
   },
   rules: [],
   serverApiUrl: undefined,
@@ -184,6 +187,79 @@ function withDefaultToolsIfMissing(
   };
 }
 
+function subagentTool(subagents: any[]): Tool {
+  const available =
+    subagents.length > 0
+      ? subagents
+          .map((model) => {
+            const label = model.title || model.model;
+            const modelId =
+              model.model && model.model !== label ? ` (${model.model})` : "";
+            return `  - ${label}${modelId}`;
+          })
+          .join("\n")
+      : "No bridge subagents are currently configured.";
+
+  return {
+    type: "function",
+    displayTitle: "Subagent",
+    wouldLikeTo: "run subagent {{{ subagent_name }}}",
+    isCurrently: "running subagent {{{ subagent_name }}}",
+    hasAlready: "ran subagent {{{ subagent_name }}}",
+    readonly: true,
+    group: BUILT_IN_GROUP_NAME,
+    function: {
+      name: BuiltInToolNames.Subagent,
+      description: `Launch a specialized Prometheus subagent to handle a specific task.
+
+Subagents are managed by the Prometheus bridge /api/models response. Models with model_roles containing "subagent" are available.
+
+Available subagents:
+${available}`,
+      parameters: {
+        type: "object",
+        required: ["description", "prompt", "subagent_name"],
+        properties: {
+          description: {
+            type: "string",
+            description: "A short description of the task",
+          },
+          prompt: {
+            type: "string",
+            description: "The task for the subagent to perform",
+          },
+          subagent_name: {
+            type: "string",
+            description:
+              "The bridge-configured subagent model title or model id to use",
+          },
+        },
+      },
+    },
+    defaultToolPolicy: "allowedWithoutPermission",
+  };
+}
+
+function withBridgeSubagentTool(
+  config: BrowserSerializedContinueConfig,
+  subagents: any[],
+): BrowserSerializedContinueConfig {
+  if (subagents.length === 0) {
+    return config;
+  }
+
+  const tools = config.tools.filter(
+    (tool) => tool.function.name !== BuiltInToolNames.Subagent,
+  );
+
+  tools.push(subagentTool(subagents));
+
+  return {
+    ...config,
+    tools,
+  };
+}
+
 export const configSlice = createSlice({
   name: "config",
   initialState: INITIAL_CONFIG_SLICE,
@@ -250,6 +326,7 @@ export const configSlice = createSlice({
           autocomplete: [],
           rerank: [],
           embed: [],
+          subagent: [],
         };
 
         apiModels.forEach((model) => {
@@ -270,6 +347,7 @@ export const configSlice = createSlice({
           autocomplete: null,
           rerank: null,
           embed: null,
+          subagent: null,
         };
 
         // For each role, select the default model if specified, otherwise first available
@@ -288,11 +366,14 @@ export const configSlice = createSlice({
         });
 
         // Update config with API models and selected models
-        state.config = withDefaultToolsIfMissing({
-          ...state.config,
-          modelsByRole,
-          selectedModelByRole,
-        });
+        state.config = withBridgeSubagentTool(
+          withDefaultToolsIfMissing({
+            ...state.config,
+            modelsByRole,
+            selectedModelByRole,
+          }),
+          modelsByRole.subagent,
+        );
 
         console.log("[configSlice] Updated models from API:", modelsByRole);
         console.log(

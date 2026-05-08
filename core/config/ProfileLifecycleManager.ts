@@ -167,6 +167,7 @@ export class ProfileLifecycleManager {
           autocomplete: [],
           rerank: [],
           embed: [],
+          subagent: [],
         },
         selectedModelByRole: {
           chat: null,
@@ -176,6 +177,7 @@ export class ProfileLifecycleManager {
           autocomplete: null,
           rerank: null,
           embed: null,
+          subagent: null,
         },
       };
 
