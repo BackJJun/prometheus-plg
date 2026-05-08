@@ -3,6 +3,7 @@ import { Tool } from "../..";
 import { ResolvedPath, resolveInputPath } from "../../util/pathResolver";
 import { BUILT_IN_GROUP_NAME, BuiltInToolNames } from "../builtIn";
 import { evaluateFileAccessPolicy } from "../policies/fileAccess";
+import { getStringArg } from "../parseArgs";
 
 export const createNewFileTool: Tool = {
   type: "function",
@@ -42,7 +43,8 @@ export const createNewFileTool: Tool = {
     ],
   },
   preprocessArgs: async (args, { ide }) => {
-    const filepath = args.filepath as string;
+    const filepath = getStringArg(args, "filepath");
+    getStringArg(args, "contents", true);
     const resolvedPath = await resolveInputPath(ide, filepath);
 
     // Store the resolved path info in args for policy evaluation

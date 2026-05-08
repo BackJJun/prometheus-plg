@@ -2,6 +2,15 @@ import { ToolCallDelta, ToolCallState } from "core";
 import { BuiltInToolNames } from "core/tools/builtIn";
 import { incrementalParseJson } from "core/util/incrementalParseJson";
 
+export function isToolCallArgumentsComplete(args: string | undefined): boolean {
+  try {
+    JSON.parse(args?.trim() || "{}");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Merge streamed tool calls
 // See example of data coming in here:
 // https://platform.openai.com/docs/guides/function-calling?api-mode=chat#streaming

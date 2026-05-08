@@ -32,11 +32,13 @@ import {
   setIsPruned,
   setToolGenerated,
   streamUpdate,
+  updateToolCallOutput,
   updateHistoryItemAtIndex,
 } from "../slices/sessionSlice";
 import { RootState, ThunkApiType } from "../store";
 import { constructMessages } from "../util/constructMessages";
 import { getBaseSystemMessage } from "../util/getBaseSystemMessage";
+import { isToolCallArgumentsComplete } from "../../util/toolCallState";
 import { executeGuiToolCallById } from "./callToolById";
 import { detectToolCallInReasoning } from "./detectToolCallInReasoning";
 import { evaluateToolPolicies } from "./evaluateToolPolicies";
@@ -115,7 +117,8 @@ export const streamNormalInput = createAsyncThunk<
       isAborted: () => {
         const state = getState();
         return (
-          state.session.streamAborter.signal.aborted || !state.session.isStreaming
+          state.session.streamAborter.signal.aborted ||
+          !state.session.isStreaming
         );
       },
       iterate: async () => {
@@ -320,7 +323,10 @@ export const streamNormalInput = createAsyncThunk<
                 }
               }
             } catch (error) {
-              console.error("[AutoCompact] Failed to compact conversation:", error);
+              console.error(
+                "[AutoCompact] Failed to compact conversation:",
+                error,
+              );
             } finally {
               dispatch(
                 setCompactionLoading({
@@ -517,7 +523,9 @@ export const streamNormalInput = createAsyncThunk<
               duration: (Date.now() - start) / 1000,
               model: selectedChatModel.model,
               provider: selectedChatModel.underlyingProviderName,
-              context: legacySlashCommandData ? "slash_command" : "regular_chat",
+              context: legacySlashCommandData
+                ? "slash_command"
+                : "regular_chat",
               ...(legacySlashCommandData && {
                 command: legacySlashCommandData.command.name,
               }),
@@ -587,10 +595,31 @@ export const streamNormalInput = createAsyncThunk<
         const generatingCalls = toolCalls.filter(
           (toolCall) => toolCall.status === "generating",
         );
-        for (const { toolCallId } of generatingCalls) {
+        for (const toolCall of generatingCalls) {
+          if (
+            !isToolCallArgumentsComplete(toolCall.toolCall.function.arguments)
+          ) {
+            dispatch(errorToolCall({ toolCallId: toolCall.toolCallId }));
+            dispatch(
+              updateToolCallOutput({
+                toolCallId: toolCall.toolCallId,
+                contextItems: [
+                  {
+                    icon: "problems",
+                    name: "Invalid Tool Call",
+                    description: "",
+                    content: `${toolCall.toolCall.function.name} failed because the arguments were invalid, with the following message: Tool call arguments were not valid JSON.\n\nPlease try something else or request further instructions.`,
+                    hidden: false,
+                  },
+                ],
+              }),
+            );
+            continue;
+          }
+
           dispatch(
             setToolGenerated({
-              toolCallId,
+              toolCallId: toolCall.toolCallId,
               tools: state1.config.config.tools,
             }),
           );
@@ -606,7 +635,11 @@ export const streamNormalInput = createAsyncThunk<
 
         const activeTools = selectActiveTools(state2);
         const generatedCalls2 = selectPendingToolCalls(state2);
-        await preprocessToolCalls(dispatch, extra.ideMessenger, generatedCalls2);
+        await preprocessToolCalls(
+          dispatch,
+          extra.ideMessenger,
+          generatedCalls2,
+        );
 
         const state3 = getState();
         if (streamAborter.signal.aborted || !state3.session.isStreaming) {

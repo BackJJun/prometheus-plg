@@ -1,5 +1,20 @@
 import { ToolCallDelta, ToolCallState } from "core";
-import { addToolCallDeltaToState } from "./toolCallState";
+import {
+  addToolCallDeltaToState,
+  isToolCallArgumentsComplete,
+} from "./toolCallState";
+
+describe("isToolCallArgumentsComplete", () => {
+  it("returns true for valid or empty JSON arguments", () => {
+    expect(isToolCallArgumentsComplete('{"filepath":"README.md"}')).toBe(true);
+    expect(isToolCallArgumentsComplete("")).toBe(true);
+    expect(isToolCallArgumentsComplete(undefined)).toBe(true);
+  });
+
+  it("returns false for incomplete JSON arguments", () => {
+    expect(isToolCallArgumentsComplete("{")).toBe(false);
+  });
+});
 
 describe("addToolCallDeltaToState", () => {
   it("should initialize a new tool call state when current state is undefined", () => {

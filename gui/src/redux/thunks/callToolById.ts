@@ -4,6 +4,7 @@ import { CLIENT_TOOLS_IMPLS } from "core/tools/builtIn";
 import { ContinueError, ContinueErrorReason } from "core/util/errors";
 import posthog from "posthog-js";
 import { callClientTool } from "../../util/clientTools/callClientTool";
+import { isToolCallArgumentsComplete } from "../../util/toolCallState";
 import { selectSelectedChatModel } from "../slices/configSlice";
 import {
   acceptToolCall,
@@ -50,6 +51,29 @@ export async function executeGuiToolCallById(
 
   if (toolCallState.status !== "generated") {
     return { streamResponse: false };
+  }
+
+  if (!isToolCallArgumentsComplete(toolCallState.toolCall.function.arguments)) {
+    const error = new ContinueError(
+      ContinueErrorReason.Unspecified,
+      "Tool call arguments were not valid JSON.",
+    );
+    dispatch(
+      updateToolCallOutput({
+        toolCallId,
+        contextItems: [
+          {
+            icon: "problems",
+            name: "Invalid Tool Call",
+            description: "Tool Call Failed",
+            content: `${toolCallState.toolCall.function.name} failed with the message: ${error.message}\n\nPlease try something else or request further instructions.`,
+            hidden: false,
+          },
+        ],
+      }),
+    );
+    dispatch(errorToolCall({ toolCallId }));
+    return { streamResponse: true };
   }
 
   const startTime = Date.now();

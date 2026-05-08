@@ -86,6 +86,28 @@ function appendReasoningFieldsIfSupported(
   }
 }
 
+export function normalizeToolCallArguments(args: unknown): string {
+  if (typeof args !== "string") {
+    try {
+      return JSON.stringify(args ?? {});
+    } catch {
+      return "{}";
+    }
+  }
+
+  const trimmed = args.trim();
+  if (!trimmed) {
+    return "{}";
+  }
+
+  try {
+    JSON.parse(trimmed);
+    return trimmed;
+  } catch {
+    return "{}";
+  }
+}
+
 export function toChatMessage(
   message: ChatMessage,
   options: CompletionOptions,
@@ -138,7 +160,7 @@ export function toChatMessage(
         type: toolCall.type!,
         function: {
           name: toolCall.function?.name!,
-          arguments: toolCall.function?.arguments || "{}",
+          arguments: normalizeToolCallArguments(toolCall.function?.arguments),
         },
       }));
     }

@@ -7,7 +7,60 @@ import {
   setProcessedToolCallArgs,
   updateToolCallOutput,
 } from "../slices/sessionSlice";
+import { isToolCallArgumentsComplete } from "../../util/toolCallState";
 import { AppThunkDispatch } from "../store";
+
+function getInvalidToolCallArgsMessage(
+  tcState: ToolCallState,
+): string | undefined {
+  if (!isToolCallArgumentsComplete(tcState.toolCall.function.arguments)) {
+    return "Tool call arguments were not valid JSON.";
+  }
+
+  const required = tcState.tool?.function.parameters?.required;
+  if (!Array.isArray(required)) {
+    return undefined;
+  }
+
+  const missingArgs = required.filter((argName) => {
+    const value = tcState.parsedArgs?.[argName];
+    return value === undefined || value === null;
+  });
+
+  if (missingArgs.length > 0) {
+    return `Missing required argument${
+      missingArgs.length === 1 ? "" : "s"
+    }: ${missingArgs.join(", ")}`;
+  }
+
+  return undefined;
+}
+
+function markInvalidToolCall(
+  dispatch: AppThunkDispatch,
+  tcState: ToolCallState,
+  errorMessage: string,
+) {
+  dispatch(
+    errorToolCall({
+      toolCallId: tcState.toolCallId,
+    }),
+  );
+  dispatch(
+    updateToolCallOutput({
+      toolCallId: tcState.toolCallId,
+      contextItems: [
+        {
+          icon: "problems",
+          name: "Invalid Tool Call",
+          description: "",
+          content: `${tcState.toolCall.function.name} failed because the arguments were invalid, with the following message: ${errorMessage}\n\nPlease try something else or request further instructions.`,
+          hidden: false,
+        },
+      ],
+    }),
+  );
+}
 
 export async function preprocessToolCalls(
   dispatch: AppThunkDispatch,
@@ -20,6 +73,12 @@ export async function preprocessToolCalls(
       let errorReason: ContinueErrorReason | undefined = undefined;
       let errorMessage: string | undefined = undefined;
       let preprocessedArgs: Record<string, unknown> | undefined = undefined;
+      const invalidArgsMessage = getInvalidToolCallArgsMessage(tcState);
+      if (invalidArgsMessage) {
+        markInvalidToolCall(dispatch, tcState, invalidArgsMessage);
+        return;
+      }
+
       const result = await ideMessenger.request("tools/preprocessArgs", {
         toolName: tcState.toolCall.function.name,
         args: tcState.parsedArgs,
@@ -40,25 +99,7 @@ export async function preprocessToolCalls(
           errorReason,
           duration_ms: 0, // preprocessing is more or less instantaneous
         });
-        dispatch(
-          errorToolCall({
-            toolCallId: tcState.toolCallId,
-          }),
-        );
-        dispatch(
-          updateToolCallOutput({
-            toolCallId: tcState.toolCallId,
-            contextItems: [
-              {
-                icon: "problems",
-                name: "Invalid Tool Call",
-                description: "",
-                content: `${tcState.toolCall.function.name} failed because the arguments were invalid, with the following message: ${errorMessage}\n\nPlease try something else or request further instructions.`,
-                hidden: false,
-              },
-            ],
-          }),
-        );
+        markInvalidToolCall(dispatch, tcState, errorMessage ?? "Unknown error");
       } else if (preprocessedArgs) {
         dispatch(
           setProcessedToolCallArgs({
