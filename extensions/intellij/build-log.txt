@@ -1,0 +1,38 @@
+﻿./gradlew : 
+위치 줄:1 문자:1
++ ./gradlew buildPlugin --no-configu
+ration-cache 2>&1 | Out-File -FileP 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSp 
+   ecified: (:String) [], RemoteEx  
+  ception
+    + FullyQualifiedErrorId : Nativ 
+   eCommandError
+ 
+FAILURE: Build failed with an except
+ion.
+
+* Where:
+Build file 'D:\temp\crux-continue-cu
+stom\extensions\intellij\build.gradl
+e.kts' line: 9
+
+* What went wrong:
+Cannot get non-null property 'plugin
+Group' on root project 'continue-int
+ellij-extension' as it does not exis
+t
+
+* Try:
+> Run with --stacktrace option to ge
+t the stack trace.
+> Run with --info or --debug option 
+to get more log output.
+> Run with --scan to get full insigh
+ts.
+> Get more help at https://help.grad
+le.org.
+
+BUILD FAILED in 1s

@@ -1,0 +1,99 @@
+﻿Initialized native services in: C:\Users\hs_yoo\.gradle\native
+Initialized jansi services in: C:\Users\hs_yoo\.gradle\native
+The client will now receive all logging from the daemon (pid: 19108). The daemon log file: C:\Users\hs_yoo\.gradle\daemon\8.14.3\daemon-19108.out.log
+Starting 17th build in daemon [uptime: 2 hrs 37 mins 32.194 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 512 MiB, non-heap usage: 42% of 384 MiB]
+Using 16 worker leases.
+Now considering [D:\temp\crux-continue-custom\extensions\intellij] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'D:\temp\crux-continue-custom\extensions\intellij\settings.gradle.kts'.
+Using local directory build cache for the root build (location = C:\Users\hs_yoo\.gradle\caches\build-cache-1, remove unused entries = after 7 days).
+Projects loaded. Root project using build file 'D:\temp\crux-continue-custom\extensions\intellij\build.gradle.kts'.
+Included projects: [root project 'continue-intellij-extension']
+
+> Configure project :
+Evaluating root project 'continue-intellij-extension' using build file 'D:\temp\crux-continue-custom\extensions\intellij\build.gradle.kts'.
+Resolved plugin [id: 'org.jetbrains.kotlin.jvm', version: '2.1.0']
+Resolved plugin [id: 'org.jetbrains.intellij.platform', version: '2.7.2']
+Resolved plugin [id: 'org.jetbrains.changelog', version: '2.1.2']
+Resolved plugin [id: 'org.jetbrains.qodana', version: '0.1.13']
+Resolved plugin [id: 'io.sentry.jvm.gradle', version: '5.8.0']
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+[org.jetbrains.intellij.platform] Configuring plugin: org.jetbrains.intellij.platform
+[org.jetbrains.intellij.platform] Configuring task: patchPluginXml
+[org.jetbrains.intellij.platform] Configuring plugin: org.jetbrains.intellij.platform.base
+[org.jetbrains.intellij.platform] Configuring task: initializeIntellijPlatformPlugin
+[org.jetbrains.intellij.platform] Configuring task: printBundledPlugins
+[org.jetbrains.intellij.platform] Configuring task: printProductsReleases
+[org.jetbrains.intellij.platform] Configuring task: setupDependencies
+[org.jetbrains.intellij.platform] Configuring plugin: org.jetbrains.intellij.platform.module
+[org.jetbrains.intellij.platform] Configuring task: generateManifest
+[org.jetbrains.intellij.platform] Configuring task: jar
+[org.jetbrains.intellij.platform] Configuring task: instrumentCode
+[org.jetbrains.intellij.platform] Configuring task: instrumentTestCode
+[org.jetbrains.intellij.platform] Configuring task: instrumentedJar
+[org.jetbrains.intellij.platform] Configuring task: composedJar
+[org.jetbrains.intellij.platform] Configuring task: prepareSandbox
+[org.jetbrains.intellij.platform] Configuring task: prepareTestSandbox
+[org.jetbrains.intellij.platform] Configuring task: prepareTestIdePerformanceSandbox
+[org.jetbrains.intellij.platform] Configuring task: prepareTest
+[org.jetbrains.intellij.platform] Configuring task: test
+[org.jetbrains.intellij.platform] Configuring task: verifyPluginProjectConfiguration
+[org.jetbrains.intellij.platform] Configuring plugin configuration verification task
+[org.jetbrains.intellij.platform] Configuring task: patchPluginXml
+[org.jetbrains.intellij.platform] Configuring task: processResources
+[org.jetbrains.intellij.platform] Configuring task: buildSearchableOptions
+[org.jetbrains.intellij.platform] Configuring task: prepareJarSearchableOptions
+[org.jetbrains.intellij.platform] Configuring task: jarSearchableOptions
+[org.jetbrains.intellij.platform] Configuring task: buildPlugin
+[org.jetbrains.intellij.platform] Configuring task: testIdePerformance
+[org.jetbrains.intellij.platform] Configuring task: runIde
+[org.jetbrains.intellij.platform] Configuring task: verifyPlugin
+[org.jetbrains.intellij.platform] Configuring task: verifyPluginSignature
+[org.jetbrains.intellij.platform] Configuring task: verifyPluginStructure
+[org.jetbrains.intellij.platform] Configuring task: signPlugin
+[org.jetbrains.intellij.platform] Configuring task: publishPlugin
+[sentry] processResources is processResources
+[sentry] bundleTask is null
+./gradlew : 
+위치 줄:1 문자:1
++ ./gradlew buildPlugin --no-configu
+ration-cache --info 2>&1 | Out-File 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSp 
+   ecified: (:String) [], RemoteEx  
+  ception
+    + FullyQualifiedErrorId : Nativ 
+   eCommandError
+ 
+FAILURE: Build failed with an except
+ion.
+
+* Where:
+Build file 'D:\temp\crux-continue-cu
+stom\extensions\intellij\build.gradl
+e.kts' line: 9
+
+* What went wrong:
+Cannot get non-null property 'plugin
+Group' on root project 'continue-int
+ellij-extension' as it does not exis
+t
+
+* Try:
+> Run with --stacktrace option to ge
+t the stack trace.
+> Run with --debug option to get mor
+e log output.
+> Run with --scan to get full insigh
+ts.
+> Get more help at https://help.grad
+le.org.
+
+BUILD FAILED in 1s
+Watched directory hierarchies: [D:\temp\crux-continue-custom\extensions\intellij]

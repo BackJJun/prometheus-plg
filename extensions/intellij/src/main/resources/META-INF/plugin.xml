@@ -1,0 +1,194 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.crux.prometheus</id>
+    <name>Prometheus</name>
+    <vendor>Prometheus Dev</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <!-- See here for why this is optional:  https://github.com/continuedev/continue/issues/2775#issuecomment-2535620877-->
+    <depends optional="true" config-file="continueintellijextension-withJSON.xml">
+        com.intellij.modules.json
+    </depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Prometheus" anchor="right" icon="com.github.crux.prometheus.Icons.Continue"
+                    factoryClass="com.github.crux.prometheus.toolWindow.ContinuePluginToolWindowFactory"/>
+        <projectService id="ContinuePluginService"
+                        serviceImplementation="com.github.crux.prometheus.services.ContinuePluginService"/>
+        <projectService
+                id="DiffStreamService"
+                serviceImplementation="com.github.crux.prometheus.editor.DiffStreamService"/>
+
+        <projectService serviceInterface="com.github.crux.prometheus.autocomplete.CompletionService"
+                        serviceImplementation="com.github.crux.prometheus.autocomplete.ContinueCompletionService"/>
+        <projectService
+                serviceInterface="com.github.crux.prometheus.nextEdit.NextEditService"
+                serviceImplementation="com.github.crux.prometheus.nextEdit.ContinueNextEditService"/>
+
+        <projectService
+                serviceImplementation="com.github.crux.prometheus.nextEdit.NextEditWindowManager"/>
+
+        <projectService
+                serviceImplementation="com.github.crux.prometheus.nextEdit.NextEditJumpManager"/>
+
+        <inline.completion.provider id="Continue" implementation="com.github.crux.prometheus.autocomplete.ContinueInlineCompletionProvider"/>
+        
+        <notificationGroup id="Prometheus"
+                           displayType="BALLOON"/>
+        <notificationGroup id="Prometheus Security"
+                           displayType="BALLOON"/>
+        <actionPromoter order="last"
+                        implementation="com.github.crux.prometheus.actions.ContinueActionPromote"/>
+        <postStartupActivity
+                implementation="com.github.crux.prometheus.activities.ContinuePluginStartupActivity"/>
+        <postStartupActivity implementation="com.github.crux.prometheus.proxy.ProxyPoolingActivity"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.crux.prometheus.services.ContinueExtensionConfigurable"
+                id="com.github.crux.prometheus.services.ContinueExtensionConfigurable"
+                displayName="Prometheus"/>
+        <applicationService
+                serviceImplementation="com.github.crux.prometheus.services.ContinueExtensionSettings"/>
+    </extensions>
+
+    <actions>
+        <action class="com.github.crux.prometheus.editor.InlineEditAction"
+                id="continue.inlineEdit"
+                description="Inline Edit"
+                text="Inline Edit">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="ctrl I"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="meta I"/>
+            <override-text place="GoToAction" text="Continue: Edit Code"/>
+        </action>
+
+        <action id="continue.acceptDiff"
+                class="com.github.crux.prometheus.actions.AcceptDiffAction"
+                text="Accept Diff" description="Accept Diff">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="shift ctrl ENTER"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="shift meta ENTER"/>
+            <override-text place="GoToAction" text="Continue: Accept Diff"/>
+        </action>
+
+        <action id="continue.restartProcess"
+                class="com.github.crux.prometheus.actions.RestartContinueProcess"
+                text="Restart Process"
+                description="Restart Process">
+            <override-text place="GoToAction" text="Continue: Restart Process"/>
+        </action>
+
+        <action id="continue.rejectDiff"
+                class="com.github.crux.prometheus.actions.RejectDiffAction"
+                text="Reject Diff" description="Reject Diff">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="shift ctrl BACK_SPACE"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="shift meta BACK_SPACE"/>
+            <override-text place="GoToAction" text="Continue: Reject Diff"/>
+        </action>
+
+        <action id="continue.acceptVerticalDiffBlock"
+                class="com.github.crux.prometheus.actions.AcceptDiffAction"
+                text="Accept Diff" description="Accept Vertical Diff Block">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="alt shift Y"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="alt shift Y"/>
+            <override-text place="GoToAction" text="Continue: Accept Vertical Diff Block"/>
+        </action>
+
+        <action id="continue.rejectVerticalDiffBlock"
+                class="com.github.crux.prometheus.actions.RejectDiffAction"
+                text="Reject Diff" description="Reject Vertical Diff Block">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="alt shift N"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="alt shift N"/>
+            <override-text place="GoToAction" text="Continue: Reject Vertical Diff Block"/>
+        </action>
+
+        <action id="continue.addLicenseKey"
+                class="com.github.crux.prometheus.license.AddLicenseKey"
+                text="Enter Enterprise License Key"
+                description="Enter Enterprise License Key">
+            <override-text place="GoToAction" text="Continue: Enter Enterprise License Key"/>
+        </action>
+
+        <action id="continue.focusContinueInputWithoutClear"
+                class="com.github.crux.prometheus.actions.FocusContinueInputWithoutClearAction"
+                text="Add selected code to context"
+                description="Focus Continue Input With Edit">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="ctrl shift J"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="meta shift J"/>
+            <override-text place="GoToAction" text="Continue: Add Highlighted Code to Context"/>
+        </action>
+
+        <action id="continue.newContinueSession"
+                icon="AllIcons.General.Add"
+                class="com.github.crux.prometheus.actions.NewContinueSessionAction"
+                text="New Session"
+                description="New Session">
+
+            <override-text place="GoToAction" text="New Session"/>
+        </action>
+
+        <action id="continue.viewHistory"
+                icon="AllIcons.Vcs.History"
+                class="com.github.crux.prometheus.actions.ViewHistoryAction"
+                text="View History"
+                description="View History">
+            <override-text place="GoToAction" text="View History"/>
+        </action>
+
+        <action id="continue.openConfigPage"
+                class="com.github.crux.prometheus.actions.OpenConfigAction"
+                icon="AllIcons.General.GearPlain"
+                text="Settings"
+                description="Settings">
+            <override-text place="GoToAction" text="Settings"/>
+        </action>
+
+        <action id="continue.openLogs"
+                class="com.github.crux.prometheus.actions.OpenLogsAction"
+                icon="AllIcons.General.ShowInfos"
+                text="Open Logs"
+                description="Open Continue Logs">
+            <override-text place="GoToAction" text="Open Continue Logs"/>
+        </action>
+
+        <group id="ContinueSidebarActionsGroup">
+            <reference ref="continue.newContinueSession"/>
+            <reference ref="continue.viewHistory"/>
+            <reference ref="continue.openConfigPage"/>
+        </group>
+
+        <action id="continue.focusContinueInput"
+                class="com.github.crux.prometheus.actions.FocusContinueInputAction"
+                text="Add selected code to context"
+                description="Focus Continue Input">
+            <keyboard-shortcut keymap="$default"
+                               first-keystroke="ctrl J"/>
+            <keyboard-shortcut keymap="Mac OS X"
+                               first-keystroke="meta J"/>
+            <add-to-group group-id="EditorPopupMenu"/>
+            <override-text place="GoToAction" text="Continue: Add Highlighted Code to Context and Clear Chat"/>
+        </action>
+        <!-- DISABLED: Continue context menu hidden per project requirements
+             To restore, uncomment this group. See INTELLIJ_CONTEXT_MENU_DISABLED.md for details.
+        <group id="ContinueProjectViewPopUpMenuGroup" popup="true" text="Continue" icon="/icons/continue.svg">
+            <action id="com.github.crux.prometheus.actions.AddToChatAction"
+                    class="com.github.crux.prometheus.actions.AddToChatAction"
+                    text="Add to Chat">
+            </action>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </group>
+        -->
+    </actions>
+</idea-plugin>

@@ -1,0 +1,4 @@
+name: "prometheus"
+version: "1.0.0"
+server_api_url: "http://dev.wyhil.com:22300"
+security_target: ["java", "py", "kt", "ts", "js"]

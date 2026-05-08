@@ -1,0 +1,19 @@
+/**
+ * Utility functions for CLI operations
+ */
+
+import EventEmitter from "events";
+
+/**
+ * Check if running in headless mode (-p/--print flags)
+ */
+export function isHeadlessMode(): boolean {
+  const args = process.argv.slice(2);
+  return args.includes("-p") || args.includes("--print");
+}
+
+export function isServe(): boolean {
+  return process.argv?.includes("serve") ?? false;
+}
+
+export const escapeEvents = new EventEmitter();
